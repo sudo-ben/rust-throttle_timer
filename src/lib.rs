@@ -1,4 +1,3 @@
-#![feature(duration_float)]
 //! Throttle events and record event stats with a simple library
 //!
 //! throttle_timer has no dependencies
@@ -86,7 +85,7 @@ impl ThrottleTimer {
                 println!(
                     "{} calls {}/sec, total calls {}, has been running for {:?}",
                     self.event_name,
-                    created_time_elapsed.as_secs_f64() / self.total_calls as f64,
+                    created_time_elapsed.as_secs() / self.total_calls as u64,
                     self.total_calls,
                     created_time_elapsed,
                 );
