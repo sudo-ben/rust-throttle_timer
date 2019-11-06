@@ -7,9 +7,8 @@
 //!
 //! ```ThrottleTimer::new(Duration::from_secs(1_u64), &"Once every second");```
 //!
-//! Calling ```do_run()``` will check the last call time. If max frequency time has not passed the fn will return false
-//! If max_frequency duration has passed since the last call will update
-//! the last called time and return true
+//! Calling ```do_run()``` will check the last call time. If max frequency time has not passed the fn will return false.
+//! If max_frequency duration has passed since the last call then the fn will return true
 //!
 //!
 //! # Example
@@ -94,9 +93,8 @@ impl ThrottleTimer {
         }
     }
 
-    /// Calling ```do_run()``` will check the last call time. If max frequency time has not passed the fn will return false
-    /// If max_frequency duration has passed since the last call will update
-    /// the last called time and return true
+    /// Calling ```do_run()``` will check the last call time. If max frequency time has not passed the fn will return false.
+    /// If max_frequency duration has passed since the last call then the fn will return true
     pub fn do_run(&mut self) -> bool {
         let now = Instant::now();
         let do_run_flag: bool = match self.maybe_last_called_time {
