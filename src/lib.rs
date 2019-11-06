@@ -14,6 +14,7 @@
 //! # Example
 //! ```
 //! use std::time::Duration;
+//! use throttle_timer::ThrottleTimer;
 //!
 //! let mut break_timer: ThrottleTimer = ThrottleTimer::new(Duration::from_secs(1_u64), &"Break");
 //! let do_break_flag = break_timer.do_run();
@@ -44,6 +45,7 @@ pub struct ThrottleTimer {
 /// # Example
 /// ```
 /// use std::time::Duration;
+/// use throttle_timer::ThrottleTimer;
 ///
 /// let mut break_timer: ThrottleTimer = ThrottleTimer::new(Duration::from_secs(1_u64), &"Break");
 /// let do_break_flag = break_timer.do_run();

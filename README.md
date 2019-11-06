@@ -18,8 +18,3 @@ if do_break_flag {
 // Run flag false as no time has passed
 assert!(!break_timer.do_run());
 ```
-
-
-Repo:
-https://github.com/benjaminmcdonald/rust-throttle_timer
-
