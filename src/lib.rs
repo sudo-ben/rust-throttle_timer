@@ -1,5 +1,5 @@
 #![feature(duration_float)]
-//! Simple library with a single struct to time events and event stats.
+//! Throttle events and record event stats with a simple library
 //!
 //! throttle_timer has no dependencies
 //!
@@ -15,7 +15,7 @@
 //! ```
 //! use std::time::Duration;
 //!
-//! let mut break_timer: ThrottleTimer = ThrottleTimer::new(&Duration::from_secs(1_u64), &"Break");
+//! let mut break_timer: ThrottleTimer = ThrottleTimer::new(Duration::from_secs(1_u64), &"Break");
 //! let do_break_flag = break_timer.do_run();
 //!
 //! // Timers always run when no previous runs
