@@ -39,6 +39,7 @@ use std::time::Duration;
 use std::time::Instant;
 use std::time::SystemTime;
 
+#[derive(Debug)]
 pub struct ThrottleTimer {
     maybe_last_called_time: Option<Instant>,
     total_calls: usize,
@@ -195,6 +196,14 @@ mod test {
         // timers always run when no previous runs
         assert_eq!(break_timer.total_calls, 100);
         break_timer.print_stats();
+    }
+
+    #[test]
+    fn test_print_debug() {
+        println!(
+            "{:?}",
+            ThrottleTimer::new(Duration::from_nanos(1_u64), &"Break")
+        );
     }
 
     #[test]

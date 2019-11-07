@@ -1,6 +1,6 @@
 [package]
 name = "throttle-timer"
-version = "0.0.5"
+version = "0.0.6"
 authors = [ "Ben McDonald <mcdonald.ben@gmail.com>" ]
 edition = "2018"
 keywords = ["throttle", "timer"]

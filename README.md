@@ -3,11 +3,11 @@ Simple Rust library to throttle events and record event stats
 
 [![Build Status](https://travis-ci.org/benjaminmcdonald/rust-throttle_timer.svg?branch=master)](https://travis-ci.org/benjaminmcdonald/rust-throttle_timer) [![Coverage Status](https://coveralls.io/repos/github/benjaminmcdonald/rust-throttle_timer/badge.svg?branch=master)](https://coveralls.io/github/benjaminmcdonald/rust-throttle_timer?branch=master)
 
-[Docs](https://docs.rs/throttle-timer/0.0.5/throttle_timer/)
+[Docs](https://docs.rs/throttle-timer/0.0.6/throttle_timer/)
 
 ## Install Cargo.toml
 ```
-throttle-timer = "0.0.5"
+throttle-timer = "0.0.6"
 ```
 
 ## Example use
