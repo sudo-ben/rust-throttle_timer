@@ -7,26 +7,28 @@ Simple Rust library to throttle events and record event stats
 
 ## Install Cargo.toml
 ```
-throttle-timer="0.0.5"
+throttle-timer = "0.0.5"
 ```
 
 ## Example use
 ```rust
 use std::time::Duration;
+use throttle_timer::ThrottleTimer;
 
-let mut break_timer: ThrottleTimer = ThrottleTimer::new(Duration::from_secs(1_u64), &"Break");
-let do_break_flag = break_timer.do_run();
+let mut throttled_fn = ThrottleTimer::new(Duration::from_secs(10_u64), &"throttled_fn");
+let mut val = 0_u8;
 
-// Timers always run when no previous runs
-assert!(do_break_flag);
-if do_break_flag {
-    println!("timer do run flag is set to true")
+// timers always run when no previous runs
+throttled_fn.do_run(&mut || val += 1);
+for _ in 0..100 {
+    // timer will not run as 10 secs has not passed
+    // do run will return false
+    throttled_fn.do_run(&mut || val += 1);
 }
 
-// Run flag false as no time has passed
-assert!(!break_timer.do_run());
+throttled_fn.print_stats();
+// throttled_fn called 0/sec, total calls 1, has been running for 10us
 
-break_timer.print_stats();
-// Break called 0/sec, total calls 1, has been running for 10us
-
+assert_eq!(throttled_fn.total_calls(), &1);
+assert_eq!(val, 1_u8);
 ```
