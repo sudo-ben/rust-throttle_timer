@@ -1,8 +1,16 @@
-# rust-throttle_timer
+# Rust throttle_timer
 Throttle events and record event stats with a simple library
 
 [![Build Status](https://travis-ci.org/benjaminmcdonald/rust-throttle_timer.svg?branch=master)](https://travis-ci.org/benjaminmcdonald/rust-throttle_timer) [![Coverage Status](https://coveralls.io/repos/github/benjaminmcdonald/rust-throttle_timer/badge.svg?branch=master)](https://coveralls.io/github/benjaminmcdonald/rust-throttle_timer?branch=master)
 
+[Docs] (https://docs.rs/throttle-timer/0.0.4/throttle_timer/)
+
+## Install Cargo.toml
+```
+throttle-timer="0.0.5"
+```
+
+## Example use
 ```rust
 use std::time::Duration;
 
@@ -17,4 +25,8 @@ if do_break_flag {
 
 // Run flag false as no time has passed
 assert!(!break_timer.do_run());
+
+break_timer.print_stats();
+// Break called 0/sec, total calls 1, has been running for 10us
+
 ```

@@ -15,17 +15,24 @@
 //! use std::time::Duration;
 //! use throttle_timer::ThrottleTimer;
 //!
-//! let mut break_timer: ThrottleTimer = ThrottleTimer::new(Duration::from_secs(1_u64), &"Break");
-//! let do_break_flag = break_timer.do_run();
+//! let mut break_timer = ThrottleTimer::new(Duration::from_secs(10_u64), &"Break");
+//! let mut val = 0_u8;
 //!
-//! // Timers always run when no previous runs
-//! assert!(do_break_flag == true);
-//! if do_break_flag {
-//!     println!("timer do run flag is set to true")
+//! // timers always run when no previous runs
+//! break_timer.do_run(&mut || val += 1);
+//! for _ in 0..100 {
+//!     // timer will not run as 10 secs has not passed
+//!     // do run will return false
+//!     break_timer.do_run(&mut || val += 1);
 //! }
 //!
-//! // Run flag false as no time has passed
-//! assert!(break_timer.do_run() == false);
+//! break_timer.print_stats();
+//! // Break called 0/sec, total calls 1, has been running for 10us
+//!
+//! assert_eq!(break_timer.total_calls(), &1);
+//! assert_eq!(val, 1_u8);
+//!
+//!
 //! ```
 
 use std::time::Duration;
@@ -47,7 +54,7 @@ pub struct ThrottleTimer {
 /// use throttle_timer::ThrottleTimer;
 ///
 /// let mut break_timer: ThrottleTimer = ThrottleTimer::new(Duration::from_secs(1_u64), &"Break");
-/// let do_break_flag = break_timer.do_run();
+/// let do_break_flag = break_timer.do_run(&mut || {});
 ///
 /// // Timers always run when no previous runs
 /// assert!(do_break_flag == true);
@@ -56,7 +63,7 @@ pub struct ThrottleTimer {
 /// }
 ///
 /// // Run flag false as no time has passed
-/// assert!(break_timer.do_run() == false);
+/// assert!(break_timer.do_run(&mut || {}) == false);
 /// ```
 impl ThrottleTimer {
     pub fn new(max_frequency: std::time::Duration, event_name: &'static str) -> Self {
@@ -83,7 +90,7 @@ impl ThrottleTimer {
         match self.created_date.elapsed() {
             Ok(created_time_elapsed) => {
                 println!(
-                    "{} calls {}/sec, total calls {}, has been running for {:?}",
+                    "{} called {}/sec, total calls {}, has been running for {:?}",
                     self.event_name,
                     created_time_elapsed.as_secs() / self.total_calls as u64,
                     self.total_calls,
@@ -96,7 +103,7 @@ impl ThrottleTimer {
 
     /// Calling ```do_run()``` will check the last call time. If max frequency time has not passed the fn will return false.
     /// If max_frequency duration has passed since the last call then the fn will return true
-    pub fn do_run(&mut self) -> bool {
+    pub fn can_do_run(&mut self) -> bool {
         let now = Instant::now();
         let do_run_flag: bool = match self.maybe_last_called_time {
             None => true,
@@ -110,9 +117,26 @@ impl ThrottleTimer {
         do_run_flag
     }
 
-    /// Same as do_run but will print a message if throttled
-    pub fn do_run_with_msg(&mut self) -> bool {
-        let do_run_flag: bool = self.do_run();
+    /// Calling ```do_run()``` will check the last call time. If max frequency time has not passed the fn will return false.
+    /// If max_frequency duration has passed since the last call then the fn will return true
+    pub fn do_run(&mut self, f: &mut FnMut()) -> bool {
+        let now = Instant::now();
+        let do_run_flag: bool = match self.maybe_last_called_time {
+            None => true,
+            Some(last_time) => now.duration_since(last_time) >= self.max_frequency,
+        };
+
+        if do_run_flag {
+            self.maybe_last_called_time = Some(now);
+            self.total_calls += 1;
+            f();
+        }
+        do_run_flag
+    }
+
+    // Same as do_run but will print a message if throttled
+    pub fn do_run_with_msg(&mut self, f: &mut FnMut()) -> bool {
+        let do_run_flag: bool = self.do_run(f);
         if !do_run_flag {
             println!(
                 "{} throttled, last time {:?}",
@@ -133,7 +157,7 @@ mod test {
     fn test_do_run() {
         let mut break_timer: ThrottleTimer =
             ThrottleTimer::new(Duration::from_secs(45_000_u64), &"Break");
-        let do_run_flag = break_timer.do_run();
+        let do_run_flag = break_timer.do_run(&mut || {});
 
         // timers always run when no previous runs
         assert!(do_run_flag);
@@ -146,7 +170,7 @@ mod test {
     fn test_do_run_with_msg() {
         let mut break_timer: ThrottleTimer =
             ThrottleTimer::new(Duration::from_secs(45_000_u64), &"Break");
-        let do_run_flag = break_timer.do_run_with_msg();
+        let do_run_flag = break_timer.do_run_with_msg(&mut || {});
 
         // timers always run when no previous runs
         assert!(do_run_flag);
@@ -164,7 +188,7 @@ mod test {
             ThrottleTimer::new(Duration::from_nanos(1_u64), &"Break");
 
         for _ in 0..100 {
-            assert_eq!(break_timer.do_run(), true);
+            assert_eq!(break_timer.do_run(&mut || {}), true);
             thread::sleep(Duration::from_nanos(100_u64));
         }
 
@@ -178,11 +202,11 @@ mod test {
         let mut break_timer = ThrottleTimer::new(Duration::from_secs(10_u64), &"Break");
 
         // timers always run when no previous runs
-        assert!(break_timer.do_run());
+        assert!(break_timer.do_run(&mut || {}));
         for _ in 0..100 {
             // timer will not run as 10 secs has not passed
             // do run will return false
-            assert!(!break_timer.do_run());
+            assert!(!break_timer.do_run(&mut || {}));
         }
         assert_eq!(break_timer.total_calls(), &1);
     }
@@ -191,22 +215,22 @@ mod test {
     fn test_with_delay() {
         let mut snack_timer: ThrottleTimer =
             ThrottleTimer::new(Duration::from_secs(1_u64), &"Snack");
-        let do_run_flag = snack_timer.do_run();
+        let do_run_flag = snack_timer.do_run(&mut || {});
         assert!(do_run_flag); // timers always run when no previous runs
         if do_run_flag {
             println!("timer do run flag is set to true")
         }
-        let do_run_flag2 = snack_timer.do_run_with_msg();
+        let do_run_flag2 = snack_timer.do_run_with_msg(&mut || {});
         assert_eq!(do_run_flag2, false); // run flag false as no time has passed
         if !do_run_flag2 {
             println!("timer flag returned execute is set to false. Execution too soon")
         }
 
         thread::sleep(snack_timer.max_frequency);
-        assert!(snack_timer.do_run());
+        assert!(snack_timer.do_run(&mut || {}));
         thread::sleep(Duration::from_millis(100_u64));
-        assert!(!snack_timer.do_run());
+        assert!(!snack_timer.do_run(&mut || {}));
         thread::sleep(Duration::from_secs(1_u64));
-        assert!(snack_timer.do_run());
+        assert!(snack_timer.do_run(&mut || {}));
     }
 }
