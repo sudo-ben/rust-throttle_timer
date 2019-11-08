@@ -1,8 +1,11 @@
 # Rust throttle_timer
 Simple Rust library to throttle events and record event stats
 
-[![throttle-timer](https://docs.rs/throttle-timer/badge.svg)]
-[![Build Status](https://travis-ci.org/benjaminmcdonald/rust-throttle_timer.svg?branch=master)](https://travis-ci.org/benjaminmcdonald/rust-throttle_timer) [![Coverage Status](https://coveralls.io/repos/github/benjaminmcdonald/rust-throttle_timer/badge.svg?branch=master)](https://coveralls.io/github/benjaminmcdonald/rust-throttle_timer?branch=master) [![Current Crates.io Version](https://img.shields.io/crates/v/throttle-timer.svg)](https://crates.io/crates/throttle-timer) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/rust-lang/docs.rs/master/LICENSE)
+[![Docs](https://docs.rs/throttle-timer/badge.svg)](https://docs.rs/throttle-timer)
+[![Build Status](https://travis-ci.org/benjaminmcdonald/rust-throttle_timer.svg?branch=master)](https://travis-ci.org/benjaminmcdonald/rust-throttle_timer)
+[![Coverage Status](https://coveralls.io/repos/github/benjaminmcdonald/rust-throttle_timer/badge.svg?branch=master)](https://coveralls.io/github/benjaminmcdonald/rust-throttle_timer?branch=master)
+[![Current Crates.io Version](https://img.shields.io/crates/v/throttle-timer.svg)](https://crates.io/crates/throttle-timer)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/rust-lang/docs.rs/master/LICENSE)
 
 
 
