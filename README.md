@@ -8,12 +8,9 @@ Simple Rust library to throttle events and record event stats
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/rust-lang/docs.rs/master/LICENSE)
 
 
-
-[Docs](https://docs.rs/throttle-timer/0.0.6/throttle_timer/)
-
 ## Install Cargo.toml
 ```
-throttle-timer = "0.0.6"
+throttle-timer = "1.0.0"
 ```
 
 ## Example use
