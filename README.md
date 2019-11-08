@@ -1,7 +1,10 @@
 # Rust throttle_timer
 Simple Rust library to throttle events and record event stats
 
-[![Build Status](https://travis-ci.org/benjaminmcdonald/rust-throttle_timer.svg?branch=master)](https://travis-ci.org/benjaminmcdonald/rust-throttle_timer) [![Coverage Status](https://coveralls.io/repos/github/benjaminmcdonald/rust-throttle_timer/badge.svg?branch=master)](https://coveralls.io/github/benjaminmcdonald/rust-throttle_timer?branch=master)
+[![throttle-timer](https://docs.rs/throttle-timer/badge.svg)]
+[![Build Status](https://travis-ci.org/benjaminmcdonald/rust-throttle_timer.svg?branch=master)](https://travis-ci.org/benjaminmcdonald/rust-throttle_timer) [![Coverage Status](https://coveralls.io/repos/github/benjaminmcdonald/rust-throttle_timer/badge.svg?branch=master)](https://coveralls.io/github/benjaminmcdonald/rust-throttle_timer?branch=master) [![Current Crates.io Version](https://img.shields.io/crates/v/throttle-timer.svg)](https://crates.io/crates/throttle-timer) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/rust-lang/docs.rs/master/LICENSE)
+
+
 
 [Docs](https://docs.rs/throttle-timer/0.0.6/throttle_timer/)
 
@@ -19,11 +22,11 @@ let mut throttled_fn = ThrottleTimer::new(Duration::from_secs(10_u64), &"throttl
 let mut val = 0_u8;
 
 // timers always run when no previous runs
-throttled_fn.do_run(&mut || val += 1);
+throttled_fn.run(&mut || val += 1);
 for _ in 0..100 {
     // timer will not run as 10 secs has not passed
     // do run will return false
-    throttled_fn.do_run(&mut || val += 1);
+    throttled_fn.run(&mut || val += 1);
 }
 
 throttled_fn.print_stats();
